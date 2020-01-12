@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+       default-init-method="myInit" default-destroy-method="cleanUp">
+
+
+<!--    http://www.springframework.org/schema/context-->
+<!--    http://www.springframework.org/schema/context/spring-context.xsd"-->
+<!--    xmlns:context="http://www.springframework.org/schema/context"-->
+
+<!--    <bean id="parentTriangle" class="com.codepractice.spring.Triangle" abstract="true" scope="singleton">-->
+<!--        <property name="points">-->
+<!--            <list>-->
+<!--                <ref bean="pointA"></ref>-->
+<!--            </list>-->
+<!--        </property>-->
+<!--    </bean>-->
+
+<!--    <bean id="triangle" class="com.codepractice.spring.Triangle" parent="parentTriangle">-->
+<!--        <property name="points">-->
+<!--            <list merge="true">-->
+<!--                <ref bean="pointB"></ref>-->
+<!--                <ref bean="pointC"></ref>-->
+<!--            </list>-->
+<!--        </property>-->
+<!--    </bean>-->
+
+<!--    <bean id="pointA" class="com.codepractice.spring.Point" >-->
+<!--        <property name="x" value="${pointA.pointX}"></property>-->
+<!--        <property name="y" value="${pointA.pointY}"></property>-->
+<!--    </bean>-->
+
+<!--    <bean id="pointB" class="com.codepractice.spring.Point" >-->
+<!--        <qualifier value="circleRelatedBean"/>-->
+<!--        <property name="x" value="${pointB.pointX}"></property>-->
+<!--        <property name="y" value="${pointB.pointY}"></property>-->
+<!--    </bean>-->
+
+<!--    <bean id="center" class="com.codepractice.spring.Point" >-->
+<!--        <property name="x" value="${pointC.pointX}"></property>-->
+<!--        <property name="y" value="${pointC.pointY}"></property>-->
+<!--    </bean>-->
+
+<!--    <bean class="com.codepractice.spring.MyBeanFactoryPP"></bean>-->
+<!--    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">-->
+<!--        <property name="locations" value="pointsconfig.properties"/>-->
+<!--    </bean>-->
+<!--    -->
+<!--    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">-->
+<!--           <property name="basenames">-->
+<!--               <list>-->
+<!--                   <value>messages</value>-->
+<!--               </list>-->
+<!--           </property>-->
+<!--    </bean>-->
+
+<!--&lt;!&ndash;    This processor check all @Required annotation in all classes.&ndash;&gt;-->
+<!--    <bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor"/>-->
+
+<!--        <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>-->
+
+<!--    <alias name="triangle" alias="triangle-alias"></alias>-->
+<!--    <alias name="triangle" alias="triangle-alias1"></alias>-->
+
+<!--    Activates the Spring infrastructure for various annotations to be detected in bean classes: Spring’s @Required, @Qualifier and @Autowired, as well as JSR 250’s -->
+<!--    @PostConstruct, @PreDestroy and @Resource (if available), and JPA’s @PersistenceContext and @PersistenceUnit (if available). -->
+<!--    Alternatively, you can choose to activate the individual BeanPostProcessors for those annotations explicitly.-->
+        <context:annotation-config/>
+
+<!--        <bean name="triangle" class="com.codepractice.spring.model.Triangle">-->
+<!--                <property name="name" value="Triangle Name" />-->
+<!--        </bean>-->
+
+<!--        <bean name="circle" class="com.codepractice.spring.model.Circle">-->
+<!--            <property name="name" value="Circle Name " />-->
+<!--        </bean>-->
+
+<!--         <bean name="shapeService" class="com.codepractice.spring.service.ShapeService" autowire="byName"/>-->
+
+<!--         <bean name="loggingAspect" class="com.codepractice.spring.aspect.LoggingAspect"/>-->
+<!--    -->
+
+        <context:component-scan base-package="com.codepractice.jdbc"></context:component-scan>
+
+        <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+                <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=UTF8&amp;useSSL=false"/>
+                <property name="username" value="root"/>
+                <property name="password" value="root"/>
+                <property name="initialSize" value="2"/>
+                <property name="maxActive" value="5"/>
+                <property name="maxIdle" value="300"/>
+                <property name="minIdle" value="10"/>
+                <property name="maxWait" value="500"/>
+        </bean>
+
+        <bean id="simpleJdbcDaoImpl" class="com.codepractice.jdbc.dao.SimpleJdbcDaoImpl">
+                <property name="dataSource" ref="dataSource"/>
+        </bean>
+
+        <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+               <property name="dataSource" ref="dataSource"/>
+               <property name="packagesToScan" value="com.codepractice.jdbc.model"/>
+                <property name="hibernateProperties">
+                        <props>
+                                <prop key="dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                                <prop key="hibernate.hibernate.hbm2ddl.auto">create-drop</prop>
+                                <prop key="show_sql">true</prop>
+                                <prop key="cache.use_query_cache">true</prop>
+                                <prop key="cache.use_second_level_cache">true</prop>
+                                <prop key="current_session_context_class">thread</prop>
+                        </props>
+                </property>
+        </bean>
+
+
+</beans>
